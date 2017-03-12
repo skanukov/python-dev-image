@@ -6,7 +6,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
   && apt-get install -y --no-install-recommends \
     build-essential \
+    curl \
     git \
+    software-properties-common \
 
   # Install Python3.
   && apt-get install -y --no-install-recommends \
@@ -21,10 +23,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     libpq-dev \
 
   # Install NodeJS and Yarn.
-  # && apt-get install -y --no-install-recommends wget \
-  # && wget -qO- http://deb.nodesource.com/setup_6.x | bash - \
-  # && apt-get install -y --no-install-recommends nodejs \
-  # && npm install --global yarn \
+  && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+  && apt-get install -y --no-install-recommends nodejs \
+  && npm install --global yarn \
 
   && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
