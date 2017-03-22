@@ -29,10 +29,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
   && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
-COPY docker-entrypoint.sh /home/root/
-
 # Set working dir.
-WORKDIR /home/root
+WORKDIR /home/docker
 
 # Default command.
-ENTRYPOINT ["/home/root/docker-entrypoint.sh"]
+COPY docker-entrypoint.sh /home/
+ENTRYPOINT ["/home/docker-entrypoint.sh"]
