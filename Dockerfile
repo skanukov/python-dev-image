@@ -1,11 +1,17 @@
 FROM ubuntu:16.04
 
-# Install system dependencies.
 RUN export DEBIAN_FRONTEND=noninteractive \
-    && apt-get update -qq \
 
+    # Set software versions.
+    PYTHON_VERSION='3.6' \
+    POSTGRESQL_VERSION='9.6' \
+    NODE_VERSION='6.x' \
+
+    # Install dependencies.
+    && apt-get update -qq \
     && apt-get install -y --no-install-recommends \
         build-essential \
+        gettext \
         software-properties-common \
         wget \
 
@@ -15,31 +21,31 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y --no-install-recommends git \
 
     # Install Python3.
-    && add-apt-repository ppa:jonathonf/python-3.6 \
+    && add-apt-repository ppa:jonathonf/python-"$PYTHON_VERSION" \
     && apt-get update -qq \
     && apt-get install -y --no-install-recommends \
-        python3.6 \
-        python3.6-dev \
+        python"$PYTHON_VERSION" \
+        python"$PYTHON_VERSION"-dev \
 
     # Install Pip3 (autoset Pip3 aliases).
-    && wget -qO- https://bootstrap.pypa.io/get-pip.py | python3.6 \
+    && wget -qO- https://bootstrap.pypa.io/get-pip.py | python"$PYTHON_VERSION" \
 
     # Set Python3 aliases.
-    && echo 'alias python3=python3.6' | tee -a ~/.bash_aliases \
+    && echo "alias python3=python$PYTHON_VERSION" | tee -a ~/.bash_aliases \
 
-    # Install Postgresql 9.6.
+    # Install Postgresql.
     && echo 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main' | \
         tee -a /etc/apt/sources.list.d/pgdg.list \
     && wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | \
         apt-key add - \
     && apt-get update -qq \
     && apt-get install -y --no-install-recommends \
-        postgresql \
-        postgresql-contrib \
+        postgresql-"$POSTGRESQL_VERSION" \
+        postgresql-contrib-"$POSTGRESQL_VERSION" \
         libpq-dev \
 
     # Install NodeJS and Yarn.
-    && wget -qO- http://deb.nodesource.com/setup_6.x | bash - \
+    && wget -qO- http://deb.nodesource.com/setup_"$NODE_VERSION" | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && npm install --global yarn \
 
